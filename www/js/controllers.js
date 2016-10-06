@@ -26,3 +26,22 @@ angular.module('starter.controllers', [])
     enableFriends: true
   };
 });
+
+.constant('a7acef80cf3c70bffc4d8d4107394a46', 'a7acef80cf3c70bffc4d8d4107394a46')
+.controller('WeatherCtrl', function($scope,$state,Weather,DataStore) {
+  //read default settings into scope
+  console.log('inside weather');
+  $scope.city  = DataStore.city;
+  var latitude  = DataStore.latitude;
+  var longitude = DataStore.longitude;
+
+  //call getCurrentWeather method in factory ‘Weather’
+  Weather.getCurrentWeather(latitude,longitude).then(function(resp) {
+    $scope.current = resp.data;
+    console.log('GOT CURRENT', $scope.current);
+    //debugger;
+  }, function(error) {
+    alert('Unable to get current conditions');
+    console.error(error);
+  });
+})
