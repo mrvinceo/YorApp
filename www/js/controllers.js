@@ -1,31 +1,10 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ionic'])
 
-.controller('DashCtrl', function($scope) {})
+.controller('HomeCtrl', function($scope) {})
 
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+// .controller('AboutCtrl', function($scope) {})
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
-})
-
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
-
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
-});
+.controller('SettingsCtrl', function($scope) {})
 
 .constant('a7acef80cf3c70bffc4d8d4107394a46', 'a7acef80cf3c70bffc4d8d4107394a46')
 .controller('WeatherCtrl', function($scope,$state,Weather,DataStore) {
@@ -45,3 +24,32 @@ angular.module('starter.controllers', [])
     console.error(error);
   });
 })
+
+.controller('BusCtrl', function($scope, $http) {
+  $scope.init = function() {
+    $http.get("sample-json/business-directory.json")
+      .success(function(data) {
+          $scope.nodes = data.nodes;
+          $scope.browse = function(v) {
+            window.open(v, "_system", "location=yes");
+          };
+          window.localStorage["nodes"] = JSON.stringify(data.nodes);
+      })
+      .error(function(data) {
+          console.log("ERROR: " + data);
+          if(window.localStorage["nodes"] !== undefined) {
+            $scope.entries = JSON.parse(window.localStorage["nodes"]);
+          }
+      });
+  };
+})
+
+.controller('AboutCtrl', function($scope, $http) {
+  $http.get('/sample-json/marknode.json')
+    .success(function(data) {
+      $scope.about = data.nodes[0];
+    })
+    .error(function(data) {
+      console.log("ERROR: " + data);
+    });
+});
